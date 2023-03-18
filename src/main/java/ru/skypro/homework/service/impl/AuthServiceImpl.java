@@ -10,6 +10,8 @@ import ru.skypro.homework.dto.RegisterReq;
 import ru.skypro.homework.dto.Role;
 import ru.skypro.homework.service.AuthService;
 
+import java.util.Random;
+
 @Service
 public class AuthServiceImpl implements AuthService {
 
@@ -24,6 +26,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public boolean login(String userName, String password) {
+        Random random = new Random();
         if (!manager.userExists(userName)) {
             return false;
         }
