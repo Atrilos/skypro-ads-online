@@ -6,9 +6,7 @@ import lombok.*;
 /**
  * DTO пользователя
  */
-@Getter
-@Setter
-@ToString
+@Data
 
 public class UserDTO {
 

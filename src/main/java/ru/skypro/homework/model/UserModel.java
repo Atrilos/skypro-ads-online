@@ -1,6 +1,8 @@
 package ru.skypro.homework.model;
 
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
 import ru.skypro.homework.dto.Role;
 
 import javax.persistence.*;
@@ -10,12 +12,15 @@ import java.util.Objects;
 /**
  * Модель пользователя
  */
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Getter
 @Setter
-@ToString
-
 @Entity
-public class User {
+@Slf4j
+@Table(name = "users")
+public class UserModel {
 
     /**
      * id пользователя
@@ -71,18 +76,12 @@ public class User {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof User that)) return false;
-        return Objects.equals(getId(), that.getId())
-                && Objects.equals(getFirstName(), that.getFirstName())
-                && Objects.equals(getLastName(), that.getLastName())
-                && Objects.equals(getEmail(), that.getEmail())
-                && Objects.equals(getPassword(), that.getPassword())
-                && Objects.equals(getPhone(), that.getPhone())
-                && Objects.equals(getRegDate(), that.getRegDate())
-                && Objects.equals(getCity(), that.getCity())
-                && Objects.equals(getImage(), that.getImage())
-                && getRole() == that.getRole();
+        if (this == o)
+            return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o))
+            return false;
+        UserModel user = (UserModel) o;
+        return id != null && Objects.equals(id, user.id);
     }
 
     @Override
