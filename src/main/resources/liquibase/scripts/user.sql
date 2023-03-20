@@ -1,0 +1,5 @@
+-- liquibase formatted sql
+-- changeset vasily_klementev:1
+-- changeset aynur_sharipov:1
+-- changeset ilya_scherbakov:1
+-- changeset sergey_yakovlev:1
