@@ -437,7 +437,7 @@ paths:
         '401':
           content: {}
           description: Unauthorized
-
+        
   /ads/me:
     get:
       operationId: getAdsMeUsingGET
@@ -662,5 +662,3 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Comment'
-x-original-swagger-version: "2.0"
-
