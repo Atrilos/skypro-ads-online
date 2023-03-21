@@ -12,25 +12,26 @@ import ru.skypro.homework.dto.UserDTO;
 @Slf4j
 @CrossOrigin(value = "http://localhost:3000")
 @RestController
+@RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController {
 
-    @PostMapping("/users/set_password")
+    @PostMapping("/set_password")
     public ResponseEntity<?> setPassword(@RequestBody NewPassword newPassword) {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/users/me")
+    @GetMapping("/me")
     public ResponseEntity<?> getUser(/*@AuthenticationPrincipal User user*/) {
         return ResponseEntity.ok().build();
     }
 
-    @PatchMapping("/users/me")
+    @PatchMapping("/me")
     public ResponseEntity<?> updateUser(@RequestBody UserDTO newUser) {
         return ResponseEntity.ok().build();
     }
 
-    @PatchMapping(value = "/users/me/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PatchMapping(value = "/me/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateUserImage(@RequestParam MultipartFile avatar) {
         return ResponseEntity.ok().build();
     }
