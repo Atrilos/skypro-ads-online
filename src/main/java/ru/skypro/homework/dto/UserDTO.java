@@ -28,6 +28,11 @@ public class UserDTO {
   private String lastName;
 
   /**
+   * Email пользователя
+   */
+  private String email;
+
+  /**
    * Телефон пользователя
    */
   private String phone;

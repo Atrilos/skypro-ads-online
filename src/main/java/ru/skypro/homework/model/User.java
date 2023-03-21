@@ -29,7 +29,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer id;
+    private Long id;
 
     /**
      * Имя пользователя
@@ -77,8 +77,8 @@ public class User {
     /**
      * Фото пользователя
      */
-    @Column(name = "image")
-    private Byte[] image;
+    @OneToOne(mappedBy = "user")
+    private Avatar image;
 
     /**
      * Права доступа пользователя
