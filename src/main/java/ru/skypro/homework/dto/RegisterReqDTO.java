@@ -1,10 +1,16 @@
 package ru.skypro.homework.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import ru.skypro.homework.dto.enums.Role;
 
 @Data
-public class RegisterReq {
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class RegisterReqDTO {
     private String username;
     private String password;
     private String firstName;

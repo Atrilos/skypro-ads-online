@@ -6,13 +6,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AdsDTO {
-    private Long id;
-    private Long author;
-    private String image;
+@Builder
+public class CreateAdsDTO {
+    private String description;
     private Integer price;
     private String title;
 }

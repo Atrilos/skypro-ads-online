@@ -21,13 +21,13 @@ public class AdsController {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<AdsDTO> addAds(@RequestPart(name = "properties") CreateAds createAds,
+    public ResponseEntity<AdsDTO> addAds(@RequestPart(name = "properties") CreateAdsDTO createAds,
                                          @RequestPart(name = "image") MultipartFile image) {
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<FullAds> getFullAd(@PathVariable(name = "id") Integer id) {
+    public ResponseEntity<FullAdsDTO> getFullAd(@PathVariable(name = "id") Integer id) {
         return ResponseEntity.ok().build();
     }
 
@@ -38,7 +38,7 @@ public class AdsController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<AdsDTO> updateAds(@PathVariable(name = "id") Integer id,
-                                            @RequestBody CreateAds createAds) {
+                                            @RequestBody CreateAdsDTO createAds) {
         return ResponseEntity.ok().build();
     }
 

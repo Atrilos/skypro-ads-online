@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class FullAds {
+public class FullAdsDTO {
     // От пользователя
     private String authorFirstName;
     private String authorLastName;
