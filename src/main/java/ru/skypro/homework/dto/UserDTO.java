@@ -1,55 +1,48 @@
 package ru.skypro.homework.dto;
 
-import lombok.*;
-
-import java.time.LocalDate;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 
 /**
  * DTO пользователя
  */
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserDTO {
 
-  /**
-   * Id пользователя
-   */
-  private Integer id;
+    /**
+     * Id пользователя
+     */
+    private Long id;
 
-  /**
-   * Имя пользователя
-   */
-  private String firstName;
+    /**
+     * Email пользователя
+     */
+    private String email;
 
+    /**
+     * Имя пользователя
+     */
+    private String firstName;
 
-  /**
-   * Фамилия пользователя
-   */
-  private String lastName;
+    /**
+     * Фамилия пользователя
+     */
+    private String lastName;
 
-  /**
-   * Email пользователя
-   */
-  private String email;
+    /**
+     * Телефон пользователя
+     */
+    private String phone;
 
-  /**
-   * Телефон пользователя
-   */
-  private String phone;
-
-  /**
-   * Дата регистрации пользователя
-   */
-  private LocalDate regDate;
-
-  /**
-   * Город пользователя
-   */
-  private String city;
-
-  /**
-   * Фото пользователя
-   */
-  private String image;
+    /**
+     * Фото пользователя
+     */
+    private String image;
 
 }
