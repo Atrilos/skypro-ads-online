@@ -8,7 +8,7 @@ import javax.persistence.*;
 import java.util.Objects;
 
 /**
- * Сущность для сохранения аватаров
+ * Сущность для сохранения картинок в объявлениях
  */
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,10 +17,11 @@ import java.util.Objects;
 @Setter
 @Entity
 @Slf4j
-@Table(name = "avatar")
-public class Avatar {
+@Table(name = "AdsImage")
+public class AdsImage {
+
     /**
-     * Id пользователя, без генерации (см. {@link javax.persistence.MapsId})
+     * Id объявления, без генерации (см. {@link javax.persistence.MapsId})
      */
     @Id
     private Long id;
@@ -35,19 +36,19 @@ public class Avatar {
     @Column(name = "data")
     private byte[] data;
     /**
-     * Односторонняя OneToOne-связь с пользователем
+     * Односторонняя OneToOne-связь с объявлением
      */
     @OneToOne(
             optional = false,
             fetch = FetchType.LAZY
     )
     @MapsId
-    private User user;
+    private Ads ads;
 
     @PostPersist
-    public void logAvatarAdded() {
+    public void logAdsImageAdded() {
         log.info(
-                "Added avatar: userId={}, mediaType={}",
+                "Added ads image: adsId={}, mediaType={}",
                 id,
                 mediaType
         );

@@ -7,7 +7,6 @@ import org.hibernate.annotations.NaturalId;
 import ru.skypro.homework.dto.enums.Role;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
@@ -61,18 +60,6 @@ public class User {
      */
     @Column(name = "phone")
     private String phone;
-
-    /**
-     * Дата регистрации пользователя
-     */
-    @Column(name = "reg_date", nullable = false)
-    private LocalDateTime regDate;
-
-    /**
-     * Город пользователя
-     */
-    @Column(name = "city")
-    private String city;
 
     /**
      * Фото пользователя
