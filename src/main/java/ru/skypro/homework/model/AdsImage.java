@@ -34,6 +34,7 @@ public class AdsImage {
      * Бинарные данные аватара
      */
     @Column(name = "data")
+    @Lob
     private byte[] data;
     /**
      * Односторонняя OneToOne-связь с объявлением

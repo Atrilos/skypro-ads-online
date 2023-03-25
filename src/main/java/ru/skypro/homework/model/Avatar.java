@@ -33,6 +33,7 @@ public class Avatar {
      * Бинарные данные аватара
      */
     @Column(name = "data")
+    @Lob
     private byte[] data;
     /**
      * Односторонняя OneToOne-связь с пользователем
