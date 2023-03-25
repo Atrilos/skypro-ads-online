@@ -17,7 +17,7 @@ import java.util.Objects;
 @Setter
 @Entity
 @Slf4j
-@Table(name = "AdsImage")
+@Table(name = "ads_image")
 public class AdsImage {
 
     /**

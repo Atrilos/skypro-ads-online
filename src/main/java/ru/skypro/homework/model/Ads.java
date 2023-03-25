@@ -27,12 +27,14 @@ public class Ads {
     @Column(name = "description")
     private String description;
 
-    @ManyToOne
-    @JoinColumn(name = "user")
+    @ManyToOne(
+            fetch = FetchType.LAZY,
+            optional = false
+    )
+    @JoinColumn(name = "user_id")
     private User user;
 
     @OneToOne(mappedBy = "ads")
-    @JoinColumn(name = "image")
     private AdsImage image;
 
     @Column(name = "price")

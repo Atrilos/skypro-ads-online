@@ -25,12 +25,18 @@ public class Comment {
 
     @Column(name = "text")
     private String text;
-    @ManyToOne
-    @JoinColumn(name = "user")
+    @ManyToOne(
+            fetch =FetchType.LAZY,
+            optional = false
+    )
+    @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "ads")
+    @ManyToOne(
+            fetch =FetchType.LAZY,
+            optional = false
+    )
+    @JoinColumn(name = "ads_id")
     private Ads ads;
     @Column(name = "created_at")
     private LocalDateTime createdAt;
