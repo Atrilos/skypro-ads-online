@@ -17,7 +17,9 @@
         <java.version>17</java.version>
         <testcontainers.version>1.17.6</testcontainers.version>
         <liquibase.version>4.20.0</liquibase.version>
+        <snakeyaml.version>1.33</snakeyaml.version>
     </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
