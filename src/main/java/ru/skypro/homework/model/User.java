@@ -58,7 +58,7 @@ public class User {
     /**
      * Телефон пользователя
      */
-    @Column(name = "phone")
+    @Column(name = "phone", length = 20)
     private String phone;
 
     /**
