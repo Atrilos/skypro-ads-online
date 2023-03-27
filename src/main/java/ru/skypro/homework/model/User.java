@@ -72,7 +72,8 @@ public class User {
      */
     @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
-    private Role role;
+    @Builder.Default
+    private Role role = Role.USER;
 
     @PostPersist
     public void logUserAdded() {
