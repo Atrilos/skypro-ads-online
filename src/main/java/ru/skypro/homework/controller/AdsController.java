@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -11,6 +12,8 @@ import ru.skypro.homework.dto.AdsDTO;
 import ru.skypro.homework.dto.CreateAdsDTO;
 import ru.skypro.homework.dto.FullAdsDTO;
 import ru.skypro.homework.dto.ResponseWrapperAds;
+import ru.skypro.homework.security.SecurityUser;
+import ru.skypro.homework.service.AdsService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
@@ -22,6 +25,8 @@ import javax.validation.constraints.Min;
 @RequestMapping("/ads")
 @RequiredArgsConstructor
 public class AdsController {
+
+    private final AdsService adsService;
 
     @GetMapping()
     public ResponseEntity<ResponseWrapperAds> getAll() {
@@ -51,8 +56,8 @@ public class AdsController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<ResponseWrapperAds> getAdsMe(/*@AuthenticationPrincipal User user*/) {
-        return ResponseEntity.ok().build();
+    public ResponseEntity<ResponseWrapperAds> getAdsMe(@AuthenticationPrincipal SecurityUser currentUser) {
+        return ResponseEntity.ok(adsService.getAdsMe(currentUser));
     }
 
     @PatchMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
