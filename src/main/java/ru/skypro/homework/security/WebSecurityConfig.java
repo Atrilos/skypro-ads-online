@@ -4,11 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import ru.skypro.homework.security.components.CustomAccessDeniedHandler;
-
-import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @RequiredArgsConstructor
@@ -39,6 +38,15 @@ public class WebSecurityConfig {
         return http.build();
     }
 
-
+    /**
+     * Шифровщик паролей для работы Spring Security
+     *
+     * @return Реализация PasswordEncoder в виде объекта BCryptPasswordEncoder
+     * @see <a href="https://hackerthink.com/solutions/recommended-of-rounds-for-bcrypt/">Recommended number of round for bcrypt</a>
+     */
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder(13);
+    }
 }
 

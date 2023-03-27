@@ -1,5 +1,6 @@
 package ru.skypro.homework.security;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -11,8 +12,9 @@ import java.util.List;
 
 @RequiredArgsConstructor
 public class SecurityUser implements UserDetails {
-    private final User user;
 
+    @Getter
+    private final User user;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

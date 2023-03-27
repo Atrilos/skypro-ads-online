@@ -10,7 +10,7 @@ import org.springframework.security.authentication.DefaultAuthenticationEventPub
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @RequiredArgsConstructor
@@ -18,6 +18,7 @@ public class AuthenticationConfiguration {
 
     private final ApplicationEventPublisher applicationEventPublisher;
     private final UserDetailsService userDetailsService;
+    private final PasswordEncoder passwordEncoder;
 
     @Bean
     public AuthenticationManager authenticationManager() {
@@ -32,18 +33,8 @@ public class AuthenticationConfiguration {
 
     private DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setPasswordEncoder(passwordEncoder());
+        provider.setPasswordEncoder(passwordEncoder);
         provider.setUserDetailsService(userDetailsService);
         return provider;
-    }
-
-    /**
-     * Шифровщик паролей для работы Spring Security
-     * @return Реализация PasswordEncoder в виде объекта BCryptPasswordEncoder
-     * @see <a href="https://hackerthink.com/solutions/recommended-of-rounds-for-bcrypt/">Recommended number of round for bcrypt</a>
-     */
-    @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(13);
     }
 }

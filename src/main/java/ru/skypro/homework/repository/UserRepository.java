@@ -11,8 +11,14 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("""
-           SELECT u FROM User u
-           WHERE UPPER(u.email) = UPPER(?1)
-           """)
+            SELECT u FROM User u
+            WHERE UPPER(u.email) = UPPER(?1)
+            """)
     Optional<User> findByEmail(String email);
+
+    @Query("""
+            SELECT (count(u) > 0) FROM User u WHERE UPPER(u.email) = UPPER(?1)
+            """)
+    boolean existsByEmail(String email);
+
 }

@@ -7,8 +7,11 @@ import org.springframework.stereotype.Service;
 import ru.skypro.homework.dto.LoginReqDTO;
 import ru.skypro.homework.dto.RegisterReqDTO;
 import ru.skypro.homework.dto.enums.Role;
-import ru.skypro.homework.model.User;
+import ru.skypro.homework.exception.UserAlreadyExistsException;
 import ru.skypro.homework.security.JpaUserDetailsService;
+
+import static ru.skypro.homework.dto.enums.Role.USER;
+import static ru.skypro.homework.exception.message.AuthMessages.USER_ALREADY_EXISTS;
 
 @Service
 @RequiredArgsConstructor
@@ -23,17 +26,12 @@ public class AuthService {
         return encoder.matches(req.getPassword(), encryptedPassword);
     }
 
-    public boolean register(RegisterReqDTO registerReq, Role role) {
-        if (manager.userExists(registerReq.getUsername())) {
-            return false;
+    public void register(RegisterReqDTO registerReq) {
+        if (userDetailsService.userExists(registerReq.getUsername())) {
+            throw new UserAlreadyExistsException(USER_ALREADY_EXISTS);
         }
-        manager.createUser(
-                User.withDefaultPasswordEncoder()
-                        .password(registerReq.getPassword())
-                        .username(registerReq.getUsername())
-                        .roles(role.name())
-                        .build()
-        );
-        return true;
+        Role role = registerReq.getRole() == null ? USER : registerReq.getRole();
+        registerReq.setRole(role);
+        userDetailsService.saveUser(registerReq);
     }
 }
