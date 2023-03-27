@@ -5,5 +5,6 @@ import ru.skypro.homework.dto.enums.Role;
 
 public interface AuthService {
     boolean login(String userName, String password);
+
     boolean register(RegisterReqDTO registerReq, Role role);
 }

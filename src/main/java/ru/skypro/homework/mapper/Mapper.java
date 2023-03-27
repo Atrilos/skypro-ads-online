@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 import ru.skypro.homework.dto.*;
-import ru.skypro.homework.model.*;
+import ru.skypro.homework.model.Ads;
+import ru.skypro.homework.model.Comment;
+import ru.skypro.homework.model.User;
 
 @Component
 @RequiredArgsConstructor

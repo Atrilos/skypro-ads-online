@@ -94,17 +94,21 @@ ALTER TABLE ads_image
 -- rollback alter table ads_image drop constraint FK_ADS_IMAGE_ON_ADS;
 
 -- changeset atrilos:1
-ALTER TABLE ads_image DROP COLUMN data;
+ALTER TABLE ads_image
+    DROP COLUMN data;
 -- rollback ALTER TABLE ads_image ADD COLUMN data bytea;
 
 -- changeset atrilos:2
-ALTER TABLE avatar DROP COLUMN data;
+ALTER TABLE avatar
+    DROP COLUMN data;
 -- rollback ALTER TABLE avatar ADD COLUMN data bytea;
 
 -- changeset atrilos:3
-ALTER TABLE ads_image ADD COLUMN data oid;
+ALTER TABLE ads_image
+    ADD COLUMN data oid;
 -- rollback ALTER TABLE ads_image DROP COLUMN data;
 
 -- changeset atrilos:4
-ALTER TABLE avatar ADD COLUMN data oid;
+ALTER TABLE avatar
+    ADD COLUMN data oid;
 -- rollback ALTER TABLE avatar DROP COLUMN data;

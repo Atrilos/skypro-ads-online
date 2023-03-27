@@ -26,14 +26,14 @@ public class Comment {
     @Column(name = "text")
     private String text;
     @ManyToOne(
-            fetch =FetchType.LAZY,
+            fetch = FetchType.LAZY,
             optional = false
     )
     @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne(
-            fetch =FetchType.LAZY,
+            fetch = FetchType.LAZY,
             optional = false
     )
     @JoinColumn(name = "ads_id")
