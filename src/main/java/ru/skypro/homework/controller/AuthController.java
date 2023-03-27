@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.skypro.homework.dto.LoginReqDTO;
 import ru.skypro.homework.service.AuthService;
 
+import javax.validation.Valid;
+
 @Slf4j
 @CrossOrigin(value = "http://localhost:3000")
 @RestController
@@ -20,7 +22,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginReqDTO req) {
+    public ResponseEntity<?> login(@RequestBody @Valid LoginReqDTO req) {
         if (authService.login(req.getUsername(), req.getPassword())) {
             return ResponseEntity.ok().build();
         } else {
