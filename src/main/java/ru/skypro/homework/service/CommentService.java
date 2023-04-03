@@ -59,6 +59,7 @@ public class CommentService {
         commentRepository.save(foundComment);
     }
 
+
     public ResponseWrapperComment getCommentsById(Ads ads, Long id, Long adId) {
          ads = adsRepository
                 .findById(adId)
