@@ -5,8 +5,8 @@ server:
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/ads-online
-    username: my_user
-    password: password
+    username: MyUsers
+    password: chocolatefrog
     driver-class-name: org.postgresql.Driver
   jpa:
     properties:

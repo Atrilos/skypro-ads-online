@@ -36,14 +36,14 @@ public class CommentService {
         return  new ResponseWrapperComment(commentByAdsId.size(), commentByAdsId);
     }
 
- // public ResponseWrapperComment addComments (CommentDTO comment) {
- //       Long adsId = new Ads().getId();
- //     /*  List<CommentDTO> commentSave = adsRepository.findById(adsId)
- //     .stream().map(commentRepository.save(comment)).collect(Collectors.toList());*/
- //      /*List<CommentDTO> commentSave = commentRepository.findById(AdsId)
- //              .stream().map(mapper::toDto).collect(Collectors.toList());*/
- //   return new ResponseWrapperComment(commentSave.size(), commentSave);
- //   }
+  public ResponseWrapperComment addComments (CommentDTO comment) {
+        Long adsId = new Ads().getId();
+      /*  List<CommentDTO> commentSave = adsRepository.findById(adsId)
+      .stream().map(commentRepository.save(comment)).collect(Collectors.toList());*/
+       List<CommentDTO> commentSave = commentRepository.findById(adsId)
+               .stream().map(mapper::toDto).collect(Collectors.toList());
+    return new ResponseWrapperComment(commentSave.size(), commentSave);
+    }
 
     public void removeCommentById(Long id) {
         log.info("Removing ad with id={}", id);
