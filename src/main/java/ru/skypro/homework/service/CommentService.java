@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.w3c.dom.Text;
 import ru.skypro.homework.dto.CommentDTO;
 import ru.skypro.homework.dto.ResponseWrapperComment;
 
@@ -30,44 +31,59 @@ public class CommentService {
 
     public ResponseWrapperComment getComments (Long adsId) {
         log.info("Get all ads created by user with id={}");
-         adsId = new Ads().getId();
-        List<CommentDTO> commentByAdsId = commentRepository.findById(adsId)
+
+        List<CommentDTO> commentByAdsId = commentRepository.findAllByAds_Id(adsId)
                 .stream().map(mapper::toDto).collect(Collectors.toList());
-        return  new ResponseWrapperComment(commentByAdsId.size(), commentByAdsId);
+        return  new ResponseWrapperComment(commentByAdsId.hashCode(),commentByAdsId);
     }
 
-  public ResponseWrapperComment addComments (CommentDTO comment) {
-        Long adsId = new Ads().getId();
+  public CommentDTO addComments ( Long adsId) {
       /*  List<CommentDTO> commentSave = adsRepository.findById(adsId)
       .stream().map(commentRepository.save(comment)).collect(Collectors.toList());*/
-       List<CommentDTO> commentSave = commentRepository.findById(adsId)
-               .stream().map(mapper::toDto).collect(Collectors.toList());
-    return new ResponseWrapperComment(commentSave.size(), commentSave);
+   /*  CommentDTO commentSave = commentRepository.save
+              .map(mapper::toDto).orElse(null);*/
+
+      Comment entity = mapper.toEntity(new CommentDTO());
+      entity.setText(entity.getText());
+      commentRepository.save(entity);
+      entity.setUser(entity.getUser());
+      commentRepository.save(entity);
+      entity.setAds(entity.getAds());
+      commentRepository.save(entity);
+      entity.setId(entity.getId());
+      commentRepository.saveAndFlush(entity);
+      return mapper.toDto(entity);
     }
 
-    public void removeCommentById(Long id) {
+    public CommentDTO removeCommentById(Long id, Long adId) {
         log.info("Removing ad with id={}", id);
-        commentRepository.deleteById(id);
+     return commentRepository.deleteByIdAndAds_Id(id,adId).map(mapper::toDto).orElse(null);
     }
 
-    public void updateComment(Long id, CommentDTO patch) {
-        log.info("Update ad with id={} with {}", id, patch);
-        Comment foundComment = commentRepository
+    public CommentDTO updateComment(Long id, Long adId) {
+        log.info("Update ad with id={} with {}", id, adId);
+      /* Comment foundComment = commentRepository
                 .findById(id)
-                .orElseThrow(() -> new RuntimeException());
-        //mapper.(patch, foundComment);
-        commentRepository.save(foundComment);
+                .orElseThrow(() -> new RuntimeException());*/
+     // mapper.createCommentToCommentPatch(patch, foundComment);
+        Comment entity = mapper.toEntity(new CommentDTO());
+        entity.setText(entity.getText());
+        commentRepository.save(entity);
+        entity.setUser(entity.getUser());
+        commentRepository.save(entity);
+        entity.setAds(entity.getAds());
+        commentRepository.save(entity);
+        entity.setId(entity.getId());
+        commentRepository.saveAndFlush(entity);
+        return mapper.toDto(entity);
+
     }
 
 
-    public ResponseWrapperComment getCommentsById(Ads ads, Long id, Long adId) {
-         ads = adsRepository
-                .findById(adId)
-                .orElseThrow(() -> new RuntimeException());
-
-        List<CommentDTO> getCommentById = commentRepository.findById(id)
-                .stream().map(mapper::toDto).collect(Collectors.toList());
-        return new ResponseWrapperComment(getCommentById.size(), getCommentById);
+    public CommentDTO getCommentsById( Long id, Long adId) {
+        log.info("getCommentsById ad with id={}", id,adId);
+        return commentRepository.findByIdAndAds_Id(id, adId)
+                .map(mapper::toDto).orElse(null);
   }
 
 }
