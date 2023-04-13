@@ -51,6 +51,12 @@ public class ApplicationExceptionHandler {
         response.sendError(HttpStatus.FORBIDDEN.value(), ex.getMessage());
     }
 
+    @ExceptionHandler(WrongPasswordException.class)
+    public void handleWrongPasswordException(WrongPasswordException ex,
+                                             HttpServletResponse response) throws IOException {
+        response.sendError(HttpStatus.FORBIDDEN.value(), ex.getMessage());
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<CustomError> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex,
                                                                              WebRequest request) {

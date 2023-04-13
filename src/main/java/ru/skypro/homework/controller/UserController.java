@@ -23,8 +23,17 @@ public class UserController {
 
     private final UserService userService;
 
+    /**
+     * Метод для смены пароля текущего пользователя
+     *
+     * @param newPassword дто-объект, содержащий старый и новый пароли
+     * @param currentUser текущий пользователь в виде оберточного класса {@link SecurityUser}
+     * @return код 200 - при удачном изменении пароля, код 403 - при введении неверного текущего пароля
+     */
     @PostMapping("/set_password")
-    public ResponseEntity<NewPasswordDTO> setPassword(@RequestBody NewPasswordDTO newPassword) {
+    public ResponseEntity<?> setPassword(@RequestBody NewPasswordDTO newPassword,
+                                         @AuthenticationPrincipal SecurityUser currentUser) {
+        userService.changePassword(currentUser, newPassword);
         return ResponseEntity.ok().build();
     }
 
@@ -39,9 +48,17 @@ public class UserController {
         return ResponseEntity.ok(userService.getUser(currentUser));
     }
 
+    /**
+     * Метод обновляет данные пользователя
+     *
+     * @param newUser     дто-объект, содержащий данные для обновления пользователя
+     * @param currentUser текущий пользователь в виде оберточного класса {@link SecurityUser}
+     * @return данные о пользователе в виде дто-объекта {@link UserDTO}
+     */
     @PatchMapping("/me")
-    public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO newUser) {
-        return ResponseEntity.ok().build();
+    public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO newUser,
+                                              @AuthenticationPrincipal SecurityUser currentUser) {
+        return ResponseEntity.ok(userService.updateUser(newUser, currentUser));
     }
 
     /**

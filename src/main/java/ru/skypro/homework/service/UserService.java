@@ -3,10 +3,13 @@ package ru.skypro.homework.service;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Session;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import ru.skypro.homework.dto.NewPasswordDTO;
 import ru.skypro.homework.dto.UserDTO;
+import ru.skypro.homework.exception.WrongPasswordException;
 import ru.skypro.homework.mapper.Mapper;
 import ru.skypro.homework.model.Avatar;
 import ru.skypro.homework.model.User;
@@ -28,6 +31,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final AvatarRepository avatarRepository;
     private final Mapper mapper;
+    private final PasswordEncoder encoder;
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -64,5 +68,32 @@ public class UserService {
         avatarRepository.save(avatar);
         user.setImage(avatar);
         userRepository.save(user);
+    }
+
+    public void changePassword(SecurityUser currentUser, NewPasswordDTO newPasswordDTO) {
+        String currentEncodedPassword = currentUser.getUser().getPassword();
+        if (!encoder.matches(newPasswordDTO.getCurrentPassword(), currentEncodedPassword)) {
+            throw new WrongPasswordException(newPasswordDTO.getCurrentPassword());
+        }
+
+        User user = currentUser.getUser();
+        try (Session session = entityManager.unwrap(Session.class)) {
+            session.update(user);
+        }
+        user.setPassword(encoder.encode(newPasswordDTO.getNewPassword()));
+
+        userRepository.save(user);
+    }
+
+    public UserDTO updateUser(UserDTO patch, SecurityUser currentUser) {
+        User user = currentUser.getUser();
+        try (Session session = entityManager.unwrap(Session.class)) {
+            session.update(user);
+        }
+        mapper.userDtoToUserPatch(patch, user);
+
+        userRepository.saveAndFlush(user);
+
+        return mapper.toDto(user);
     }
 }

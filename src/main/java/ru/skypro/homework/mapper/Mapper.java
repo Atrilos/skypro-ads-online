@@ -55,6 +55,10 @@ public class Mapper {
         mapper.map(commentDTO, targetComment);
     }
 
+    public void userDtoToUserPatch(UserDTO userDTO, User targetUser) {
+        mapper.map(userDTO, targetUser);
+    }
+
     public AdsImage toAdsImageEntity(MultipartFile image) throws IOException {
         return AdsImage.builder()
                 .mediaType(image.getContentType())
