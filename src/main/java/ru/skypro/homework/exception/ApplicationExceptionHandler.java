@@ -30,6 +30,12 @@ public class ApplicationExceptionHandler {
         response.sendError(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
     }
 
+    @ExceptionHandler({AdNotFoundException.class, ImageNotFoundException.class})
+    public void handleNotFoundExceptions(RuntimeException ex,
+                                         HttpServletResponse response) throws IOException {
+        response.sendError(HttpStatus.NOT_FOUND.value(), ex.getMessage());
+    }
+
     @ExceptionHandler(BindException.class)
     public void handleBindException(BindException ex,
                                     HttpServletResponse response) throws IOException {

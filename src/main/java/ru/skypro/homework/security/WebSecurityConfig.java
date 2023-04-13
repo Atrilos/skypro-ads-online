@@ -18,7 +18,8 @@ public class WebSecurityConfig {
             "/swagger-ui.html",
             "/v3/api-docs",
             "/webjars/**",
-            "/login", "/register"
+            "/login", "/register",
+            "/ads/*/image"
     };
 
     private final AuthenticationEntryPoint restAuthenticationEntryPoint;
@@ -26,15 +27,15 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.httpBasic()
+        http.csrf().disable().httpBasic()
                 .authenticationEntryPoint(restAuthenticationEntryPoint)
                 .and()
                 .authorizeRequests()
                 .mvcMatchers(AUTH_WHITELIST).permitAll()
                 .mvcMatchers("/ads/**", "/users/**").authenticated()
                 .and()
-                .csrf().disable().cors().disable()
                 .exceptionHandling().accessDeniedHandler(customAccessDeniedHandler);
+        http.cors();
         return http.build();
     }
 
