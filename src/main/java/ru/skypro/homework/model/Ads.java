@@ -16,17 +16,29 @@ import java.util.Objects;
 @Slf4j
 @Table(name = "ads")
 public class Ads {
+    /**
+     * Первичный ключ объявления
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
+    /**
+     * Название объявления
+     */
     @Column(name = "title")
     private String title;
 
+    /**
+     * Описание объявления
+     */
     @Column(name = "description")
     private String description;
 
+    /**
+     * Пользователь оставивший объявление
+     */
     @ManyToOne(
             fetch = FetchType.LAZY,
             optional = false
@@ -34,9 +46,15 @@ public class Ads {
     @JoinColumn(name = "user_id")
     private User user;
 
+    /**
+     * Картинка объявления
+     */
     @OneToOne(mappedBy = "ads")
     private AdsImage image;
 
+    /**
+     * Цена товара
+     */
     @Column(name = "price")
     private Integer price;
 

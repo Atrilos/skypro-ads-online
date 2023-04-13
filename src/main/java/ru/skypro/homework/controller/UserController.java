@@ -12,6 +12,8 @@ import ru.skypro.homework.dto.UserDTO;
 import ru.skypro.homework.security.SecurityUser;
 import ru.skypro.homework.service.UserService;
 
+import java.io.IOException;
+
 @Slf4j
 @CrossOrigin(value = "http://localhost:3000")
 @RestController
@@ -26,6 +28,12 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * Метод возвращает данные о пользователе
+     *
+     * @param currentUser текущий пользователь в виде оберточного класса {@link SecurityUser}
+     * @return данные о пользователе в виде дто-объекта {@link UserDTO}
+     */
     @GetMapping("/me")
     public ResponseEntity<UserDTO> getUser(@AuthenticationPrincipal SecurityUser currentUser) {
         return ResponseEntity.ok(userService.getUser(currentUser));
@@ -36,8 +44,18 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * Метод обновляет аватар пользователя
+     *
+     * @param image       аватар пользователя в виде {@link MultipartFile}
+     * @param currentUser текущий пользователь в виде оберточного класса {@link SecurityUser}
+     * @return код 200 - при удачном добавлении пользователя
+     * @throws IOException при невозможности считать бинарные данные из {@link MultipartFile}
+     */
     @PatchMapping(value = "/me/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> updateUserImage(@RequestParam MultipartFile image) {
+    public ResponseEntity<?> updateUserImage(@RequestParam MultipartFile image,
+                                             @AuthenticationPrincipal SecurityUser currentUser) throws IOException {
+        userService.updateUserImage(image, currentUser);
         return ResponseEntity.ok().build();
     }
 }

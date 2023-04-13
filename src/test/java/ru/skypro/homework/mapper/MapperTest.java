@@ -5,6 +5,7 @@ import org.modelmapper.ModelMapper;
 import ru.skypro.homework.dto.*;
 import ru.skypro.homework.dto.enums.Role;
 import ru.skypro.homework.model.Ads;
+import ru.skypro.homework.model.AdsImage;
 import ru.skypro.homework.model.Comment;
 import ru.skypro.homework.model.User;
 
@@ -175,6 +176,47 @@ class MapperTest {
         Ads actual = out.map(inputCreateAds, Ads.class);
 
         assertThat(actual)
+                .usingRecursiveComparison()
+                .isEqualTo(expected);
+    }
+
+    @Test
+    public void createAdsToAdsPatchMapping() {
+        User mockUser = User.builder()
+                .id(1L)
+                .email("a@a.com")
+                .firstName("Alex")
+                .lastName("Keen")
+                .build();
+        AdsImage mockImage = AdsImage.builder()
+                .id(10L)
+                .data(new byte[]{1, 2, 3, 5, 6})
+                .mediaType("png")
+                .build();
+        Ads existedAds = Ads.builder()
+                .id(10L)
+                .title("Aaa")
+                .description("Bbb")
+                .user(mockUser)
+                .image(mockImage)
+                .price(100)
+                .build();
+        CreateAdsDTO inputCreateAds = CreateAdsDTO.builder()
+                .description("bla")
+                .price(1255)
+                .build();
+        Ads expected = Ads.builder()
+                .id(10L)
+                .title("Aaa")
+                .description("bla")
+                .user(mockUser)
+                .image(mockImage)
+                .price(1255)
+                .build();
+
+        out.map(inputCreateAds, existedAds);
+
+        assertThat(existedAds)
                 .usingRecursiveComparison()
                 .isEqualTo(expected);
     }
