@@ -25,6 +25,7 @@ public class Comment {
 
     @Column(name = "text")
     private String text;
+
     @ManyToOne(
             fetch = FetchType.LAZY,
             optional = false
@@ -38,6 +39,7 @@ public class Comment {
     )
     @JoinColumn(name = "ads_id")
     private Ads ads;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
