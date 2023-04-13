@@ -77,8 +77,9 @@ public class AdsController {
      * @return код 204 - если объявление было удалено или не существовало
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> removeAds(@PathVariable(name = "id") @Min(1L) Long id) {
-        adsService.removeAdById(id);
+    public ResponseEntity<?> removeAds(@PathVariable(name = "id") @Min(1L) Long id,
+                                       @AuthenticationPrincipal SecurityUser currentUser) {
+        adsService.removeAdById(id, currentUser);
         return ResponseEntity.noContent().build();
     }
 
@@ -91,8 +92,9 @@ public class AdsController {
      */
     @PatchMapping("/{id}")
     public ResponseEntity<AdsDTO> updateAds(@PathVariable(name = "id") @Min(1L) Long id,
-                                            @RequestBody CreateAdsDTO createAds) {
-        adsService.updateAds(id, createAds);
+                                            @RequestBody @Valid CreateAdsDTO createAds,
+                                            @AuthenticationPrincipal SecurityUser currentUser) {
+        adsService.updateAds(id, createAds, currentUser);
         return ResponseEntity.ok().build();
     }
 
@@ -116,8 +118,9 @@ public class AdsController {
      */
     @PatchMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<byte[]> updateAdsImage(@PathVariable("id") @Min(1L) Long id,
-                                                 @RequestParam MultipartFile image) throws IOException {
+                                                 @RequestParam MultipartFile image,
+                                                 @AuthenticationPrincipal SecurityUser currentUser) throws IOException {
 
-        return adsService.updateAds(id, image);
+        return adsService.updateAds(id, image, currentUser);
     }
 }

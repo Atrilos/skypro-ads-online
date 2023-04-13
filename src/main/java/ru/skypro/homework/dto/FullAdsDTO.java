@@ -17,7 +17,7 @@ public class FullAdsDTO {
     private String phone;
 
     // От объявления
-    private Long id;
+    private Long pk;
     private String title;
     private String description;
     private Integer price;

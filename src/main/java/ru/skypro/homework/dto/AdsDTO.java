@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AdsDTO {
-    private Long id;
+    private Long pk;
     private Long author;
     private String image;
     private Integer price;

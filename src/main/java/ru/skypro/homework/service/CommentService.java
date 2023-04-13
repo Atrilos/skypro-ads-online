@@ -3,10 +3,14 @@ package ru.skypro.homework.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 import ru.skypro.homework.dto.CommentDTO;
 import ru.skypro.homework.dto.ResponseWrapperComment;
+import ru.skypro.homework.dto.enums.Role;
 import ru.skypro.homework.exception.AdNotFoundException;
 import ru.skypro.homework.exception.CommentNotFoundException;
 import ru.skypro.homework.mapper.Mapper;
@@ -40,7 +44,7 @@ public class CommentService {
 
         List<CommentDTO> commentsByAdsId = commentRepository.findAllByAdsId(adsId)
                 .stream().map(mapper::toDto).collect(Collectors.toList());
-        return new ResponseWrapperComment(commentsByAdsId.hashCode(), commentsByAdsId);
+        return new ResponseWrapperComment(commentsByAdsId.size(), commentsByAdsId);
     }
 
     @Transactional
@@ -64,21 +68,36 @@ public class CommentService {
         return mapper.toDto(entity);
     }
 
-    public void removeCommentById(Long adId, Long commentId) {
+    @Transactional
+    public void removeCommentById(Long adId, Long commentId, SecurityUser currentUser) {
         log.info("Removing comment with id={} from ad with id={}", commentId, adId);
+        ensurePermission(commentId, currentUser);
         commentRepository.deleteById(commentId);
     }
 
-    public CommentDTO updateComment(Long id, CommentDTO patch) {
+    @Transactional
+    public CommentDTO updateComment(Long id, CommentDTO patch, SecurityUser currentUser) {
         log.info("Update comment with id={} with={}", id, patch);
+        ensurePermission(id, currentUser);
 
         Comment foundComment = commentRepository
                 .findById(id)
                 .orElseThrow(() -> new CommentNotFoundException(id));
         mapper.commentDtoToCommentPatch(patch, foundComment);
+        commentRepository.save(foundComment);
 
-        return mapper.toDto(commentRepository.save(foundComment));
+        return mapper.toDto(foundComment);
     }
 
-
+    private void ensurePermission(Long commentId, SecurityUser currentUser) {
+        Long userId = commentRepository
+                .findById(commentId)
+                .orElseThrow(() -> new CommentNotFoundException(commentId))
+                .getUser()
+                .getId();
+        if (!userId.equals(currentUser.getUser().getId())
+            && !currentUser.getAuthorities().contains(new SimpleGrantedAuthority(Role.ADMIN.name()))) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "В доступе отказано!");
+        }
+    }
 }
