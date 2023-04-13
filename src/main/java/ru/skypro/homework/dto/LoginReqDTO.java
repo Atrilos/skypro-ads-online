@@ -7,7 +7,7 @@ import javax.validation.constraints.Size;
 
 @Data
 public class LoginReqDTO {
-    @Size(min = 6)
+    @Size(min = 8)
     private String password;
     @Email
     private String username;

@@ -35,8 +35,10 @@ public class MapperConfiguration {
 
     private void addMappingsCommentToCommentDto(ModelMapper mapper) {
         TypeMap<Comment, CommentDTO> typeMap = mapper.createTypeMap(Comment.class, CommentDTO.class);
+        Converter<Long, String> idToUrl = userIdToAvatarConverter();
 
         typeMap.addMappings(m -> {
+            m.using(idToUrl).map(src -> src.getUser().getId(), CommentDTO::setAuthorImage);
             m.map(src -> src.getUser().getId(), CommentDTO::setAuthor);
             m.map(src -> src.getUser().getFirstName(), CommentDTO::setAuthorFirstName);
             m.map(Comment::getId, CommentDTO::setPk);
@@ -54,7 +56,7 @@ public class MapperConfiguration {
         typeMap.addMappings(m -> {
             m.using(idToUrl).map(Ads::getId, AdsDTO::setImage);
             m.map(src -> src.getUser().getId(), AdsDTO::setAuthor);
-            m.map(Ads::getId, AdsDTO::setId);
+            m.map(Ads::getId, AdsDTO::setPk);
         });
     }
 
@@ -64,12 +66,21 @@ public class MapperConfiguration {
 
         typeMap.addMappings(m -> {
             m.using(idToUrl).map(Ads::getId, FullAdsDTO::setImage);
-            m.map(Ads::getId, FullAdsDTO::setId);
+            m.map(Ads::getId, FullAdsDTO::setPk);
             m.map(src -> src.getUser().getFirstName(), FullAdsDTO::setAuthorFirstName);
             m.map(src -> src.getUser().getLastName(), FullAdsDTO::setAuthorLastName);
             m.map(src -> src.getUser().getEmail(), FullAdsDTO::setEmail);
             m.map(src -> src.getUser().getPhone(), FullAdsDTO::setPhone);
         });
+    }
+
+    private Converter<Long, String> userIdToAvatarConverter() {
+        return new AbstractConverter<>() {
+            @Override
+            protected String convert(Long source) {
+                return "/users/%d/image".formatted(source);
+            }
+        };
     }
 
     private Converter<Long, String> adsIdToImageUrlConverter() {

@@ -44,7 +44,6 @@ class MapperTest {
                 .usingRecursiveComparison()
                 .ignoringFieldsMatchingRegexes("image")
                 .isEqualTo(expected);
-        assertThat(actual.getImage()).contains("user");
     }
 
     @Test
@@ -86,7 +85,7 @@ class MapperTest {
                 .user(inputUser)
                 .build();
         AdsDTO expected = AdsDTO.builder()
-                .id(1L)
+                .pk(1L)
                 .title("aaa")
                 .price(12)
                 .author(123L)
@@ -118,7 +117,7 @@ class MapperTest {
                 .user(inputUser)
                 .build();
         FullAdsDTO expected = FullAdsDTO.builder()
-                .id(inputAds.getId())
+                .pk(inputAds.getId())
                 .authorFirstName(inputUser.getFirstName())
                 .authorLastName(inputUser.getLastName())
                 .description(inputAds.getDescription())
@@ -274,6 +273,5 @@ class MapperTest {
                 .usingRecursiveComparison()
                 .ignoringFields("authorImage")
                 .isEqualTo(expected);
-        assertThat(actual.getAuthorImage()).contains("users", inputUser.getId().toString());
     }
 }

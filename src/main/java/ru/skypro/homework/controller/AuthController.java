@@ -21,6 +21,13 @@ public class AuthController {
 
     private final AuthService authService;
 
+    /**
+     * Логин-метод
+     *
+     * @param req дто-объект, содержащий данные для входа
+     * @return код 200 - введенные данные верные, вход произведен;<p>
+     * код 403 - в ином случае
+     */
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody @Valid LoginReqDTO req) {
         if (authService.login(req)) {

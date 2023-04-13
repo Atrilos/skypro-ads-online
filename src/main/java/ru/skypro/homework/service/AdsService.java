@@ -3,15 +3,19 @@ package ru.skypro.homework.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 import ru.skypro.homework.dto.AdsDTO;
 import ru.skypro.homework.dto.CreateAdsDTO;
 import ru.skypro.homework.dto.FullAdsDTO;
 import ru.skypro.homework.dto.ResponseWrapperAds;
+import ru.skypro.homework.dto.enums.Role;
 import ru.skypro.homework.exception.AdNotFoundException;
 import ru.skypro.homework.mapper.Mapper;
 import ru.skypro.homework.model.Ads;
@@ -61,14 +65,28 @@ public class AdsService {
     }
 
     @Transactional
-    public void removeAdById(Long id) {
+    public void removeAdById(Long id, SecurityUser currentUser) {
         log.info("Removing ad with id={}", id);
+        ensurePermission(id, currentUser);
         adsRepository.deleteById(id);
     }
 
+    private void ensurePermission(Long id, SecurityUser currentUser) {
+        Long userId = adsRepository
+                .findById(id)
+                .orElseThrow(() -> new AdNotFoundException(id))
+                .getUser()
+                .getId();
+        if (!userId.equals(currentUser.getUser().getId())
+            && !currentUser.getAuthorities().contains(new SimpleGrantedAuthority(Role.ADMIN.name()))) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "В доступе отказано!");
+        }
+    }
+
     @Transactional
-    public void updateAds(Long id, CreateAdsDTO patch) {
+    public void updateAds(Long id, CreateAdsDTO patch, SecurityUser currentUser) {
         log.info("Update ad with id={} with {}", id, patch);
+        ensurePermission(id, currentUser);
         Ads foundAd = adsRepository
                 .findById(id)
                 .orElseThrow(() -> new AdNotFoundException(id));
@@ -94,12 +112,16 @@ public class AdsService {
         return mapper.toDto(entity);
     }
 
-    public ResponseEntity<byte[]> updateAds(Long id, MultipartFile image) throws IOException {
+    public ResponseEntity<byte[]> updateAds(Long id, MultipartFile image, SecurityUser currentUser) throws IOException {
         log.info("Update ad image for id={}", id);
+        ensurePermission(id, currentUser);
         Ads foundAd = adsRepository
                 .findById(id)
                 .orElseThrow(() -> new AdNotFoundException(id));
         AdsImage adsImage = mapper.toAdsImageEntity(image);
+        adsImage.setAds(foundAd);
+        adsImage.setId(foundAd.getId());
+        adsImageRepository.save(adsImage);
         foundAd.setImage(adsImage);
         adsRepository.save(foundAd);
         return ResponseEntity.ok()

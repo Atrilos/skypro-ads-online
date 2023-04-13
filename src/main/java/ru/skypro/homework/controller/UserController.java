@@ -12,6 +12,7 @@ import ru.skypro.homework.dto.UserDTO;
 import ru.skypro.homework.security.SecurityUser;
 import ru.skypro.homework.service.UserService;
 
+import javax.validation.Valid;
 import java.io.IOException;
 
 @Slf4j
@@ -31,7 +32,7 @@ public class UserController {
      * @return код 200 - при удачном изменении пароля, код 403 - при введении неверного текущего пароля
      */
     @PostMapping("/set_password")
-    public ResponseEntity<?> setPassword(@RequestBody NewPasswordDTO newPassword,
+    public ResponseEntity<?> setPassword(@RequestBody @Valid NewPasswordDTO newPassword,
                                          @AuthenticationPrincipal SecurityUser currentUser) {
         userService.changePassword(currentUser, newPassword);
         return ResponseEntity.ok().build();
@@ -56,7 +57,7 @@ public class UserController {
      * @return данные о пользователе в виде дто-объекта {@link UserDTO}
      */
     @PatchMapping("/me")
-    public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO newUser,
+    public ResponseEntity<UserDTO> updateUser(@RequestBody @Valid UserDTO newUser,
                                               @AuthenticationPrincipal SecurityUser currentUser) {
         return ResponseEntity.ok(userService.updateUser(newUser, currentUser));
     }
