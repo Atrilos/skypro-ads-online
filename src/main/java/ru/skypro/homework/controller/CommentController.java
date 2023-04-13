@@ -3,9 +3,11 @@ package ru.skypro.homework.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import ru.skypro.homework.dto.CommentDTO;
 import ru.skypro.homework.dto.ResponseWrapperComment;
+import ru.skypro.homework.security.SecurityUser;
 import ru.skypro.homework.service.CommentService;
 
 import javax.validation.constraints.Min;
@@ -16,38 +18,33 @@ import javax.validation.constraints.Min;
 @RequestMapping("/ads")
 @RequiredArgsConstructor
 public class CommentController {
+
     private final CommentService commentService;
-    @GetMapping("/{ad_pk}/comments")
-    public ResponseEntity<ResponseWrapperComment> getComments(@PathVariable(name = "ad_pk") @Min(1L) Long adId) {
+
+    @GetMapping("/{id}/comments")
+    public ResponseEntity<ResponseWrapperComment> getComments(@PathVariable(name = "id") @Min(1L) Long adId) {
         return ResponseEntity.ok(commentService.getComments(adId));
     }
 
-    @PostMapping("/{ad_pk}/comments")
-    public ResponseEntity<CommentDTO> addComments(@PathVariable(name = "ad_pk") @Min(1L) Long adId,
-                                                              @RequestBody CommentDTO comment) {
-        return ResponseEntity.ok(commentService.addComments(adId));
+    @PostMapping("/{id}/comments")
+    public ResponseEntity<CommentDTO> addComments(@PathVariable(name = "id") @Min(1L) Long adId,
+                                                  @RequestBody CommentDTO comment,
+                                                  @AuthenticationPrincipal SecurityUser currentUser) {
+        return ResponseEntity.ok(commentService.addComments(adId, comment, currentUser));
     }
 
-    @GetMapping("/{ad_pk}/comments/{id}")
-    public ResponseEntity<CommentDTO> getComment(@PathVariable("ad_pk") @Min(1L) Long adId,
-                                                  @PathVariable("id") @Min(1L)   Long id) {
-
-        return ResponseEntity.ok(commentService.getCommentsById(id,adId));
-    }
-
-    @DeleteMapping("/{ad_pk}/comments/{id}")
-    public ResponseEntity<?> deleteComments(@PathVariable("ad_pk") @Min(1L)Long adId,
-                                            @PathVariable("id") @Min(1L)   Long id) {
-        commentService.removeCommentById(id, adId);
-        return ResponseEntity.noContent().build();
-    }
-
-    @PatchMapping("/{ad_pk}/comments/{id}")
-    public ResponseEntity<CommentDTO> updateComments(@PathVariable("ad_pk") @Min(1L) Long adId,
-                                                     @PathVariable("id") @Min(1L)    Long id,
-                                                     @RequestBody CommentDTO comment) {
-        commentService.updateComment(id, adId);
+    @DeleteMapping("/{adId}/comments/{commentId}")
+    public ResponseEntity<?> deleteComments(@PathVariable("adId") @Min(1L) Long adId,
+                                            @PathVariable("commentId") @Min(1L) Long id) {
+        commentService.removeCommentById(adId, id);
         return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/{adId}/comments/{commentId}")
+    public ResponseEntity<CommentDTO> updateComments(@PathVariable("adId") @Min(1L) Long adId,
+                                                     @PathVariable("commentId") @Min(1L) Long id,
+                                                     @RequestBody CommentDTO comment) {
+        return ResponseEntity.ok(commentService.updateComment(id, comment));
     }
 
 }

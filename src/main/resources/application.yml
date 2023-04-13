@@ -1,12 +1,12 @@
 server:
-  port: 8888
+  port: 8080
   error:
     include-message: always
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/ads-online
-    username: MyUsers
-    password: chocolatefrog
+    username: my_user
+    password: password
     driver-class-name: org.postgresql.Driver
     hikari:
       auto-commit: false
