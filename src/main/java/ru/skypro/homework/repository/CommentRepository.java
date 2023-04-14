@@ -1,6 +1,5 @@
 package ru.skypro.homework.repository;
 
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -13,7 +12,7 @@ import java.util.Optional;
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
-    @EntityGraph(attributePaths = {"user", "ads"})
+    @Query("select c from Comment c join fetch c.ads join fetch c.user where c.ads.id = ?1")
     Optional<Comment> findAllByAdsId(Long adsId);
 
     @Query("delete from Comment c where c.id = ?1")
@@ -22,7 +21,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     @Override
     void deleteById(Long id);
 
-    @EntityGraph(attributePaths = {"user", "ads"})
+    @Query("select c from Comment c join fetch c.user join fetch c.ads where c.id = ?1")
     @Override
     Optional<Comment> findById(Long id);
 }

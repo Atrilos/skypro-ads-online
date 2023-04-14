@@ -18,7 +18,7 @@ public interface AdsRepository extends JpaRepository<Ads, Long> {
     @Query("SELECT a FROM Ads a WHERE a.user.id = ?1")
     List<Ads> findByUserId(Long userId);
 
-    @EntityGraph(attributePaths = {"user", "image"})
+    @Query("select a from Ads a join fetch a.image i join fetch a.user where a.id = ?1")
     @Override
     Optional<Ads> findById(Long id);
 

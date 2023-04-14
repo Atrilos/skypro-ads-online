@@ -2,6 +2,7 @@ package ru.skypro.homework.service;
 
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Session;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,6 @@ import ru.skypro.homework.model.User;
 import ru.skypro.homework.repository.AvatarRepository;
 import ru.skypro.homework.repository.UserRepository;
 import ru.skypro.homework.security.SecurityUser;
-import ru.skypro.homework.service.utils.UrlUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -37,11 +37,7 @@ public class UserService {
 
     public UserDTO getUser(SecurityUser currentUser) {
         User user = currentUser.getUser();
-        UserDTO dto = mapper.toDto(user);
-        if (user.getImage() != null) {
-            dto.setImage(UrlUtils.userImageUrlFromId(user.getId()));
-        }
-        return dto;
+        return mapper.toDto(user);
     }
 
     @Transactional
@@ -67,7 +63,12 @@ public class UserService {
         }
         avatarRepository.save(avatar);
         user.setImage(avatar);
-        userRepository.save(user);
+        saveInDbAndCache(user);
+    }
+
+    @CachePut(value = "user", key = "#result.id")
+    public User saveInDbAndCache(User user) {
+        return userRepository.save(user);
     }
 
     public void changePassword(SecurityUser currentUser, NewPasswordDTO newPasswordDTO) {
@@ -82,7 +83,7 @@ public class UserService {
         }
         user.setPassword(encoder.encode(newPasswordDTO.getNewPassword()));
 
-        userRepository.save(user);
+        saveInDbAndCache(user);
     }
 
     public UserDTO updateUser(UserDTO patch, SecurityUser currentUser) {
@@ -92,8 +93,6 @@ public class UserService {
         }
         mapper.userDtoToUserPatch(patch, user);
 
-        userRepository.saveAndFlush(user);
-
-        return mapper.toDto(user);
+        return mapper.toDto(saveInDbAndCache(user));
     }
 }
