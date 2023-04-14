@@ -22,9 +22,7 @@ public class ImageService {
 
     public ResponseEntity<byte[]> getAdsImage(Long id) {
         log.info("Get adsImage from database with id={}", id);
-        AdsImage adsImage = adsImageRepository
-                .findById(id)
-                .orElseThrow(() -> new ImageNotFoundException(id));
+        AdsImage adsImage = getAdsImageFromDb(id);
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(adsImage.getMediaType()))
                 .body(adsImage.getData());
@@ -32,12 +30,22 @@ public class ImageService {
 
     public ResponseEntity<byte[]> getAvatarImage(Long id) {
         log.info("Get avatar from database with id={}", id);
-        Avatar avatar = avatarRepository
-                .findById(id)
-                .orElseThrow(() -> new ImageNotFoundException(id));
+        Avatar avatar = getAvatarFromDb(id);
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(avatar.getMediaType()))
                 .body(avatar.getData());
+    }
+
+    public AdsImage getAdsImageFromDb(Long id) {
+        return adsImageRepository
+                .findById(id)
+                .orElseThrow(() -> new ImageNotFoundException(id));
+    }
+
+    public Avatar getAvatarFromDb(Long id) {
+        return avatarRepository
+                .findById(id)
+                .orElseThrow(() -> new ImageNotFoundException(id));
     }
 
 }

@@ -61,7 +61,7 @@ public class AdsService {
         Ads foundAd = adsRepository
                 .findById(id)
                 .orElseThrow(() -> new AdNotFoundException(id));
-        return mapper.toFullAdsDto(foundAd); // TODO
+        return mapper.toFullAdsDto(foundAd);
     }
 
     @Transactional

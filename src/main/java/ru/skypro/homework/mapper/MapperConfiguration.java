@@ -6,10 +6,7 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import ru.skypro.homework.dto.AdsDTO;
-import ru.skypro.homework.dto.CommentDTO;
-import ru.skypro.homework.dto.FullAdsDTO;
-import ru.skypro.homework.dto.RegisterReqDTO;
+import ru.skypro.homework.dto.*;
 import ru.skypro.homework.model.Ads;
 import ru.skypro.homework.model.Comment;
 import ru.skypro.homework.model.User;
@@ -31,6 +28,14 @@ public class MapperConfiguration {
         addMappingsAdsToFullAdsDto(mapper);
         addMappingsRegisterReqToUser(mapper);
         addMappingsCommentToCommentDto(mapper);
+        addMappingsUserToUserDto(mapper);
+    }
+
+    private void addMappingsUserToUserDto(ModelMapper mapper) {
+        TypeMap<User, UserDTO> typeMap = mapper.createTypeMap(User.class, UserDTO.class);
+        Converter<Long, String> idToUrl = userIdToAvatarConverter();
+
+        typeMap.addMappings(m -> m.using(idToUrl).map(User::getId, UserDTO::setImage));
     }
 
     private void addMappingsCommentToCommentDto(ModelMapper mapper) {

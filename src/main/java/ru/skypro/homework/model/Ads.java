@@ -3,6 +3,7 @@ package ru.skypro.homework.model;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -14,6 +15,8 @@ import java.util.Objects;
 @Setter
 @Entity
 @Slf4j
+@Cacheable
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "ads")
 public class Ads {
     /**
@@ -43,6 +46,7 @@ public class Ads {
             fetch = FetchType.LAZY,
             optional = false
     )
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -50,6 +54,7 @@ public class Ads {
      * Картинка объявления
      */
     @OneToOne(mappedBy = "ads")
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
     private AdsImage image;
 
     /**
