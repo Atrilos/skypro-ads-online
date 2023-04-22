@@ -3,8 +3,11 @@ package ru.skypro.homework.mapper;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.*;
 import ru.skypro.homework.model.*;
+
+import java.io.IOException;
 
 @Component
 @RequiredArgsConstructor
@@ -42,5 +45,31 @@ public class Mapper {
 
     public FullAdsDTO toFullAdsDto(Ads ads) {
         return mapper.map(ads, FullAdsDTO.class);
+    }
+
+    public void createAdsToAdsPatch(CreateAdsDTO createAdsDTO, Ads targetAds) {
+        mapper.map(createAdsDTO, targetAds);
+    }
+
+    public void commentDtoToCommentPatch(CommentDTO commentDTO, Comment targetComment) {
+        mapper.map(commentDTO, targetComment);
+    }
+
+    public void userDtoToUserPatch(UserDTO userDTO, User targetUser) {
+        mapper.map(userDTO, targetUser);
+    }
+
+    public AdsImage toAdsImageEntity(MultipartFile image) throws IOException {
+        return AdsImage.builder()
+                .mediaType(image.getContentType())
+                .data(image.getBytes())
+                .build();
+    }
+
+    public Avatar toAvatarEntity(MultipartFile image) throws IOException {
+        return Avatar.builder()
+                .mediaType(image.getContentType())
+                .data(image.getBytes())
+                .build();
     }
 }

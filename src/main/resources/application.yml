@@ -3,15 +3,29 @@ server:
   error:
     include-message: always
 spring:
+  cache:
+    jcache:
+      config: classpath:ehcache.xml
   datasource:
     url: jdbc:postgresql://localhost:5432/ads-online
     username: my_user
     password: password
     driver-class-name: org.postgresql.Driver
+    hikari:
+      auto-commit: false
   jpa:
     properties:
+      javax:
+        persistence:
+          sharedCache:
+            mode: ENABLE_SELECTIVE
       hibernate:
         format_sql: true
+        cache:
+          use_second_level_cache: true
+          use_query_cache: true
+          region:
+            factory_class: org.hibernate.cache.jcache.JCacheRegionFactory
     hibernate:
       ddl-auto: validate
     database-platform: org.hibernate.dialect.PostgreSQLDialect

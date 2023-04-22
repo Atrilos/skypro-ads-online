@@ -6,7 +6,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.skypro.homework.dto.enums.Role;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 @Data
 @Builder
@@ -15,15 +18,15 @@ import javax.validation.constraints.*;
 public class RegisterReqDTO {
     @Email
     private String username;
-    @Size(min = 6, message = "Минимальная длина пароля 6 символов")
+    @Size(min = 8, message = "Минимальная длина пароля 8 символов")
     private String password;
     @NotBlank
-    @Pattern(regexp = "[a-zA-ZА-Яа-я]*")
+    @Pattern(regexp = "[a-zA-ZА-я]*")
     private String firstName;
     @NotBlank
-    @Pattern(regexp = "[a-zA-ZА-Яа-я]*")
+    @Pattern(regexp = "[a-zA-ZА-я]*")
     private String lastName;
-    @Pattern(regexp = "\\+7\\s?[(]?\\d{3}[)]?\\s?\\d{3}-?\\d{2}-?\\d{2}")
+    @Pattern(regexp = "\\+7\\s?\\(?\\d{3}\\)?\\s?\\d{3}-?\\d{2}-?\\d{2}")
     private String phone;
     private Role role;
 }

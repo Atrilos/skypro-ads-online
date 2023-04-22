@@ -3,6 +3,7 @@ package ru.skypro.homework.model;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -17,6 +18,8 @@ import java.util.Objects;
 @Setter
 @Entity
 @Slf4j
+@Cacheable
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "ads_image")
 public class AdsImage {
 
@@ -43,6 +46,7 @@ public class AdsImage {
             optional = false,
             fetch = FetchType.LAZY
     )
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
     @MapsId
     private Ads ads;
 

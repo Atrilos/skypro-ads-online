@@ -9,10 +9,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import ru.skypro.homework.dto.RegisterReqDTO;
-import ru.skypro.homework.dto.enums.Role;
 import ru.skypro.homework.service.AuthService;
 
-import static ru.skypro.homework.dto.enums.Role.USER;
+import javax.validation.Valid;
 
 @Slf4j
 @CrossOrigin(value = "http://localhost:3000")
@@ -22,13 +21,15 @@ public class RegisterController {
 
     private final AuthService authService;
 
+    /**
+     * Метод для регистрации нового пользователя
+     *
+     * @param req дто-объект, содержащий данные о новом пользователе
+     * @return код 201 - если пользователь был создан
+     */
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterReqDTO req) {
-        Role role = req.getRole() == null ? USER : req.getRole();
-        if (authService.register(req, role)) {
-            return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+    public ResponseEntity<?> register(@RequestBody @Valid RegisterReqDTO req) {
+        authService.register(req);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }

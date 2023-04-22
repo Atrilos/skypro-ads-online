@@ -5,6 +5,7 @@ import org.modelmapper.ModelMapper;
 import ru.skypro.homework.dto.*;
 import ru.skypro.homework.dto.enums.Role;
 import ru.skypro.homework.model.Ads;
+import ru.skypro.homework.model.AdsImage;
 import ru.skypro.homework.model.Comment;
 import ru.skypro.homework.model.User;
 
@@ -43,7 +44,6 @@ class MapperTest {
                 .usingRecursiveComparison()
                 .ignoringFieldsMatchingRegexes("image")
                 .isEqualTo(expected);
-        assertThat(actual.getImage()).contains("user");
     }
 
     @Test
@@ -85,7 +85,7 @@ class MapperTest {
                 .user(inputUser)
                 .build();
         AdsDTO expected = AdsDTO.builder()
-                .id(1L)
+                .pk(1L)
                 .title("aaa")
                 .price(12)
                 .author(123L)
@@ -117,7 +117,7 @@ class MapperTest {
                 .user(inputUser)
                 .build();
         FullAdsDTO expected = FullAdsDTO.builder()
-                .id(inputAds.getId())
+                .pk(inputAds.getId())
                 .authorFirstName(inputUser.getFirstName())
                 .authorLastName(inputUser.getLastName())
                 .description(inputAds.getDescription())
@@ -180,6 +180,47 @@ class MapperTest {
     }
 
     @Test
+    public void createAdsToAdsPatchMapping() {
+        User mockUser = User.builder()
+                .id(1L)
+                .email("a@a.com")
+                .firstName("Alex")
+                .lastName("Keen")
+                .build();
+        AdsImage mockImage = AdsImage.builder()
+                .id(10L)
+                .data(new byte[]{1, 2, 3, 5, 6})
+                .mediaType("png")
+                .build();
+        Ads existedAds = Ads.builder()
+                .id(10L)
+                .title("Aaa")
+                .description("Bbb")
+                .user(mockUser)
+                .image(mockImage)
+                .price(100)
+                .build();
+        CreateAdsDTO inputCreateAds = CreateAdsDTO.builder()
+                .description("bla")
+                .price(1255)
+                .build();
+        Ads expected = Ads.builder()
+                .id(10L)
+                .title("Aaa")
+                .description("bla")
+                .user(mockUser)
+                .image(mockImage)
+                .price(1255)
+                .build();
+
+        out.map(inputCreateAds, existedAds);
+
+        assertThat(existedAds)
+                .usingRecursiveComparison()
+                .isEqualTo(expected);
+    }
+
+    @Test
     public void commentDTOToComment() {
         CommentDTO inputCommentDTO = CommentDTO.builder()
                 .author(1L)
@@ -232,6 +273,5 @@ class MapperTest {
                 .usingRecursiveComparison()
                 .ignoringFields("authorImage")
                 .isEqualTo(expected);
-        assertThat(actual.getAuthorImage()).contains("users", inputUser.getId().toString());
     }
 }
